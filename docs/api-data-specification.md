@@ -65,6 +65,6 @@ If the entities exists, the following JSON content is returned and a HTTP 200 OK
 ## Authorization
 To stop everyone from publishing and creating data entities the Data API uses a similar authorization scheme as the Image API.
 
-The authorization tokens are generated in [the same way](api-image-specification.md#token-generation) but instead of utilizing the `Token` header, the token is passed individually for each entity in the JSON formatted POST request. This requires one token for each entity.
+The authorization tokens are generated in [the same way](api-image-specification.md#token-generation) but instead of utilizing the `Token` header, the token is passed individually for each entity in the JSON formatted POST request. This requires one token for each entity. If the correct token is not provided, the data entity will not be published.
 
 
