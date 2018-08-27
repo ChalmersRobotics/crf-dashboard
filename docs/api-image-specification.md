@@ -1,14 +1,14 @@
 # Image API Specification
 
 ## Description
-The purpose of this API is to be able to upload images for access from outside the local network, for example webcam images.
+The purpose of this API is to be able to publish images for access from outside the local network, for example webcam images.
 
 ## Configuration
 The only parameter that needs configuration is the secret key wich is used to authorize image uploads. It can be set in the file `includes/config.php`. 
 
 ## Endpoint Usage
 #### `POST /api/image/{name}`
-A form file request to this endpoint is used to upload an image to the specified resource name. The name of the POST file must be `image`, but the name of the file on disk is ignored (except the file extension). The following restrictions apply:
+A form file request to this endpoint is used to publish an image to the specified resource name. The name of the POST file must be `image`, but the name of the file on disk is ignored (except the file extension). The following restrictions apply:
 * Allowed file extensions are `.jpeg`, `.jpg` and `.png`
 * Max file size: 2 MB
 * Must be a correct image file
@@ -26,7 +26,7 @@ If the above conditions are not met or any other error occured during upload (e.
 
 ```json
 {
-    "success": true|false,
+    "success": false,
     "error": [
         "First error",
         "Second error"
