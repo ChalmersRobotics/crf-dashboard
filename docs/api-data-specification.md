@@ -3,21 +3,39 @@ The project uses a simple REST API to store and retrieve the data using a simple
 
 Each data is stored as an entity with the following parameters
 * `name` the name of the entity
-* `type` the type of the entity
-* `value` the value of the entity
+* `value` the string value of the entity
 * `ts_publish` a (unix) timestamp of when the entity's value was last published by the client using a POST request (handled by the server)
 * `ts_update` a (unix) timestamp provided by the client for when the entity's value was last updated
 
 
-## Available types
-[comment]: <> (TODO: Add `number` and `bool`)
-The available types are `string` and `image`.
-
-For the `image` type, a GET request to `/api/data/:name/raw` is required to fetch the image contents.
-
 ## Endpoints
 
-### `PUT /api/data/{name}`
+### `POST /api/data/{name}`
+Used to publish data. The request should be JSON formatted with the following content:
+```json
+{
+    "data":[
+        {
+            "name": "foo",
+            "value": "Hello",
+            "ts_update": 123456789,
+            "token": "<TOKEN>"
+        },
+        {
+            "name": "bar",
+            "value": "World",
+            "ts_update": 123456789,
+            "token": "<TOKEN>"
+        }
+    ]
+}
+```
+
+> See the [Authorization](#authorization) section for details on the `token` field.
+
+[WIP] Response, Error codes
+
+
 
 ### `GET /api/data/{name}`
 Returns the value of the entity with the specified name. Mulitiple entities can be selected by separating their names with a colon (`:`). A `GET` to `/api/data/foo:bar` will return the values of both the `foo` and `bar`entity.
@@ -26,32 +44,27 @@ If the entities exists, the following JSON content is returned and a HTTP 200 OK
 
 ```json
 {
-    "success" : "true|false",
+    "success" : "true",
     "entities": [
         {
             "name": "foo",
-            "type": "string",
             "value": "Hello World",
             "ts_publish": 123456789,
             "ts_update": 123456789
         },
         {
             "name" : "bar",
-            "type" : "image",
-            "value" : null,
+            "value" : "content",
             "ts_publish": 123456789,
             "ts_update": 123456789
-        },
-        ...
+        }
     ]
 }
 ```
 
-For an entity of the type `image`, the value returned is set to null, and the contents of the image has to be fetched using `/raw` below.
+## Authorization
+To stop everyone from publishing and creating data entities the Data API uses a similar authorization scheme as the Image API.
 
-### `GET /api/data/{name}/raw`
-Returns the raw value for the specified entity without any JSON formatting. When the entity is of an `image` type, the HTTP header `Content-Type: image/png` will be sent.
+The authorization tokens are generated in [the same way](api-data-specification.md#token-generation) but instead of utilizing the `Token` header, the token is passed individually for each entity in the JSON formatted POST request. This requires one token for each entity.
 
->The `/raw` endpoint does not support multiple entity names as input
 
-### `PUT /api/data/{name}`
