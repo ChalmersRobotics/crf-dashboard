@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Keygen</title>
+
+    
+    <script
+              src="https://code.jquery.com/jquery-3.1.1.min.js"
+              integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+              crossorigin="anonymous"></script>
+    <script src="sha256.min.js"></script>
+              
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#submit").click(function(){
+                let secret = $("#secret").val();
+                let resource = $("#resource").val();
+            
+                let key = sha256(secret+resource);
+
+                $("#token").val(key);
+            });
+
+            $('#copy').click(function(){
+                /* Get the text field */
+                var copyText = document.getElementById("token");
+
+                /* Select the text field */
+                copyText.select();
+
+                //$(this).select();
+
+                /* Copy the text inside the text field */
+                document.execCommand("copy");
+
+                /* Alert the copied text */
+                $('#copyalert').text('Copied!');
+            });
+        });       
+    </script>
+</head>
+<body>
+    <h1>Acces key generator</h1>
+    <p>This generator is executed on your local machine using JavaScript. No data is sent over the network.</p>
+    <table>
+        <tr>
+            <td>Enter your secret key: </td>
+            <td><input type="text" id="secret"></td>
+        </tr>
+        <tr>
+            <td>Entery the resource name:</td>
+            <td><input type="text" id="resource"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><button id="submit">Generate</button></td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Access Token:</td>
+            <td><input type="text" id="token"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><button id="copy">Copy To Clipboard</button></td>
+        </tr> 
+        <tr>
+            <td></td>
+            <td><label id="copyalert"></label></td>
+        </tr>
+    </table>        
+</body>
+</html>

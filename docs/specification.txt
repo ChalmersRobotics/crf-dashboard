@@ -1,0 +1,27 @@
+Response from upload_image.php:
+
+{
+    "status":"uploaded|error|unauthorized",
+    "error": [
+        "First error",
+        "Second error"    
+    ]
+}
+
+// Generic response layout
+{
+    "success":"true|false",
+    "data" :{
+        /* Application specific data in here */
+    },    
+    "error": [
+        "First error",
+        "Second error"    
+    ]
+}
+
+
+//Content sent TO update_data.php
+
+
+

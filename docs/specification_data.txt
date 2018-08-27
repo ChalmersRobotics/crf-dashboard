@@ -1,0 +1,56 @@
+/* För att ladda upp data: */
+/*    POST till /api/data med JSON-data enligt: */
+
+    {
+        "data":[
+            {"name": "temp", "value":"24.5", "timestamp": "1533206911", "token":""},
+            {"name": "hum", "value":"50", "timestamp": "1533206911", "token":""},
+            {"name": "count", "value":"5", "timestamp": "1533206911", "token":""}
+        ]
+    }
+
+    /* vilket ger förljande respons */
+    
+    {
+        "success":"true|false",   
+        "error": [ /**/
+            "First error",
+            {"name":"temp", "cause":"unauthorized"}   
+        ]
+    }
+    
+
+/* För att hämta data: */
+/*    GET till /api/data med JSON-data enligt: */
+
+    {
+        "data":[
+            "temp",
+            "hum",
+            "count"
+        ]
+    },
+
+ /*   vilket ger följande respons: */
+
+    {
+        "success":"true|false",
+        "data" :{
+            /* Application specific data in here */
+            "temp":{
+                "value":"",
+                "timestamp":"",
+                "lastUpload":""
+            },
+            "hum":{
+                
+            },
+            "count":{
+                
+            }
+        },    
+        "error": [
+            "First error",
+            "Second error"    
+        ]
+    }

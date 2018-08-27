@@ -1,0 +1,12 @@
+# enable the rewrite engiene for this directory
+RewriteEngine On
+
+# matches against "/image/(a-name_here) and redirects the request to test.php
+# the END directive makes sure that no further matching is done for this request
+# which would make the "test.php?name=XXXX" match the 404 redirection below
+RewriteRule ^image/([0-9a-zA-Z_-]*)$ image.php?name=$1 [NC,END]
+RewriteRule ^data/([0-9a-zA-Z_:-]*)$ data.php?key=$1 [NC,END]
+RewriteRule ^data$ data.php?key= [NC,END]
+
+# Force a 404 not found
+RewriteRule ^ - [R=404,L,NS]

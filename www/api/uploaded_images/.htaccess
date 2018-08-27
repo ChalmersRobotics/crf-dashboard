@@ -1,0 +1,9 @@
+## Apache 2.2
+#Deny from all
+
+## Apache 2.4
+#Require all denied
+
+# my version
+RewriteEngine On
+RewriteRule ^ - [R=404,L,NS]
