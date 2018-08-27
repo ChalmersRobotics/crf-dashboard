@@ -16,7 +16,7 @@ A webserver running PHP and a MySQL database.
 
 
 ## API Details
-See [Image API Specification]{docs/api-image-specification.md} and [Data API Specification]{} for more details on the specific APIs.
+See [Image API Specification](docs/api-image-specification.md) and [Data API Specification]() for more details on the specific APIs.
 
 ## Client Library [WIP]
-The repository includes a simple python based client library and examples for publishing both images and data. The code uses the excelent [Requests]{http://docs.python-requests.org/en/master/} library for HTTP communication.
+The repository includes a simple python based client library and examples for publishing both images and data. The code uses the excelent [Requests](http://docs.python-requests.org/en/master/) library for HTTP communication.
