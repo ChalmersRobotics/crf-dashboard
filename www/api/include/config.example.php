@@ -7,8 +7,8 @@
         'db_password' => "password",
         'db_database' => "database",
 
-        // the table prefix
-        'db_table_prefix' => "data_",
+        // the table name
+        'db_table' => "data_keystore",
 
         // the secret key
         'key_secret' => "ThisISTheSuperSecretKey",

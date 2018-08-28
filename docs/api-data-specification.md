@@ -45,20 +45,18 @@ If the entities exists, the following JSON content is returned and a HTTP 200 OK
 ```json
 {
     "success" : "true",
-    "entities": [
-        {
-            "name": "foo",
+    "data": {
+        "foo": {
             "value": "Hello World",
             "ts_publish": 123456789,
             "ts_update": 123456789
         },
-        {
-            "name" : "bar",
+        "bar" :{
             "value" : "content",
             "ts_publish": 123456789,
             "ts_update": 123456789
         }
-    ]
+    }
 }
 ```
 
@@ -68,3 +66,19 @@ To stop everyone from publishing and creating data entities the Data API uses a 
 The authorization tokens are generated in [the same way](api-image-specification.md#token-generation) but instead of utilizing the `Token` header, the token is passed individually for each entity in the JSON formatted POST request. This requires one token for each entity. If the correct token is not provided, the data entity will not be published.
 
 
+## Database Setup
+
+Setting up the database need to be done only once. The following SQL creates a table `data_keystore` and sets the `name` column to a uniqe key which is required for the API to function properly.
+
+```sql
+CREATE TABLE `data_keystore` (
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `name` varchar(255) NOT NULL,
+  `value` varchar(255) NOT NULL,
+  `ts_update` bigint(20) NOT NULL,
+  `ts_publish` bigint(20) NOT NULL
+) DEFAULT CHARSET=latin1;
+
+ALTER TABLE `data_keystore`
+  ADD UNIQUE KEY `name` (`name`);
+```

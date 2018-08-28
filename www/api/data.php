@@ -22,7 +22,7 @@
             // get the data keys requested
             $keys = explode($config['data_name_separator'], $keyInput);
         }else{
-            // yes - fetch all
+            // fetch all
             $keys = null;
         }
         
@@ -37,6 +37,14 @@
         // return data and end script
         end_script(true, $data, null, 200);
 
+    } else if ($requestMethod ==='OPTIONS') {
+        // this is a CORS preflight request
+        //header('Access-Control-Allow-Origin: https://chalmersrobotics.se');
+        //header('Access-Control-Allow-Methods: GET, OPTIONS');
+        
+        header("Content-Length: 0");
+        header("Content-Type: text/plain");
+        exit();
     } else if ($requestMethod === 'POST') {
 
         // check if we have correct json-body first
@@ -57,7 +65,7 @@
         $values = [];
         foreach($req->data as $key){
             // any missing fields?
-            if(!isset($key->name) || !isset($key->value) || !isset($key->timestamp) || !isset($key->token)){
+            if(!isset($key->name) || !isset($key->value) || !isset($key->ts_update) || !isset($key->token)){
                 $errors[] = "Missing required fields";
                 $success = false;
                 continue;

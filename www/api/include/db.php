@@ -23,7 +23,7 @@
         function get_values($keys){
 
             // select columns and convert datetime to unix time
-            $query = 'SELECT `name`, `value`, UNIX_TIMESTAMP(`timestamp_update`), UNIX_TIMESTAMP(`timestamp_upload`) FROM `data_keystore`';
+            $query = 'SELECT `name`, `value`, `ts_update`, `ts_publish` FROM `data_keystore`';
 
             // if keys specified
             if($keys){
@@ -45,8 +45,6 @@
                 print_r($this->db->errorInfo());
             }
 
-            
-
             // iterate over all returned rows and create the result
             $result = []; 
             foreach($stmt->fetchAll() as $row){
@@ -61,8 +59,8 @@
                 */
                 $result[$row['name']] = [                    
                     'value' => $row['value'],
-                    'timestamp_update' => $row['UNIX_TIMESTAMP(`timestamp_update`)'],   
-                    'timestamp_upload' => $row['UNIX_TIMESTAMP(`timestamp_upload`)'],   
+                    'ts_update' => $row['ts_update'],   
+                    'ts_publish' => $row['ts_publish'],   
                 ];           
             }       
 
@@ -74,7 +72,7 @@
 
             // the query tries to insert a new row in the table, but the name is required to be unique and therefore the values are updated insted!
             // this allows for new variables to be created "on demand"
-            $query = "INSERT INTO data_keystore (`name`, `value`,`timestamp_update`, `timestamp_upload`) VALUES (:name, :value, FROM_UNIXTIME(:timestamp), CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE `value`=VALUES(`value`),`timestamp_update`=VALUES(`timestamp_update`),`timestamp_upload`=VALUES(`timestamp_upload`)";
+            $query = "INSERT INTO data_keystore (`name`, `value`,`ts_update`, `ts_publish`) VALUES (:name, :value, :ts_update, UNIX_TIMESTAMP()) ON DUPLICATE KEY UPDATE `value`=VALUES(`value`),`ts_update`=VALUES(`ts_update`),`ts_publish`=VALUES(`ts_publish`)";
             
             
             // do one query for each insert
@@ -82,7 +80,7 @@
                 $stmt = $this->db->prepare($query);
                 $stmt->bindValue(':name', $key->name);
                 $stmt->bindValue(':value', $key->value);
-                $stmt->bindValue(':timestamp', $key->timestamp);
+                $stmt->bindValue(':ts_update', $key->ts_update);
 
                 $stmt->execute();
                 /*

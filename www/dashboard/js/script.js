@@ -45,7 +45,7 @@ function updateValues(){
                 });
 
                 // "updated XX ago" text
-                const agoText = "updated " + moment.unix(key.timestamp_update).fromNow();
+                const agoText = "updated " + moment.unix(key.ts_update).fromNow();
 
                 $("[data-timestamp=" + name + "]").text(agoText);
             }        
