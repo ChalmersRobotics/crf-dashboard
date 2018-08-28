@@ -1,5 +1,0 @@
-include/config.php
-
-# ignore uploaded images except the .htaccess file
-uploaded_images/*
-!uploaded_images/.htaccess

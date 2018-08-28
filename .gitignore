@@ -1,1 +1,22 @@
+
+# VS Code settings
 .vscode
+
+# Python compiled files
+**/__pycache__
+
+# Testing images
+client/images/*
+
+
+#### API ####
+# ignore uploaded images except the .htaccess file
+www/api/uploaded_images/*
+!www/api/uploaded_images/.htaccess
+
+# ignore config file (only keep example)
+www/api/include/config.php
+
+
+# keep .gitkeep files
+!.gitkeep
