@@ -1,4 +1,4 @@
-# Protocol Reference
+# Data API Specification
 The project uses a simple REST API to store and retrieve the data using a simple CRUD interface.
 
 Each data is stored as an entity with the following parameters
@@ -8,7 +8,7 @@ Each data is stored as an entity with the following parameters
 * `ts_update` a (unix) timestamp provided by the client for when the entity's value was last updated
 
 
-## Endpoints
+## Endpoint Usage
 
 ### `POST /api/data/{name}`
 Used to publish data. The request should be JSON formatted with the following content:
@@ -33,8 +33,25 @@ Used to publish data. The request should be JSON formatted with the following co
 
 > See the [Authorization](#authorization) section for details on the `token` field.
 
-[WIP] Response, Error codes
+If everything is correct the following response is returned together with a 200 OK HTTP response code.
+```json
+{
+    "success": true
+}
+```
 
+If any of the above fields are missing, or the token is not correct, the following response is returned with a description of what is wrong.
+```json
+{
+    "success": false,
+    "error": [
+        {"name": "foo", "cause": "Missing required fields"},
+        {"name": "bar", "cause": "Unauthorized"}
+    ]
+}
+```
+
+> Please note that even though errors may occur, the data entities that did *not* generate an error are *still* published.
 
 
 ### `GET /api/data/{name}`

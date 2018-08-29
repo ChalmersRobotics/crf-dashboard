@@ -57,7 +57,7 @@
 
         // parser error?
         if(!$req || !is_array($req->data)){
-            end_script(false, $null, 'Malformed JSON request', 400); // Bad request        
+            end_script(false, -1, 'Malformed JSON request', 400); // Bad request        
         }
 
         // iterate through each value to store
@@ -66,7 +66,10 @@
         foreach($req->data as $key){
             // any missing fields?
             if(!isset($key->name) || !isset($key->value) || !isset($key->ts_update) || !isset($key->token)){
-                $errors[] = "Missing required fields";
+                $errors[] = array(
+                    'name' => $key->name,
+                    'cause' => 'Missing required fields'
+                );
                 $success = false;
                 continue;
             }
@@ -77,6 +80,7 @@
                     'name' => $key->name,
                     'cause' => 'Unauthorized'
                 );
+                $success = false;
                 continue;
             }
 
@@ -96,7 +100,7 @@
             
         }
 
-        end_script($success, null, $errors, 200); // Ok     
+        end_script($success, -1, $errors, 200); // Ok     
 
     }
 
