@@ -30,8 +30,19 @@ A webserver running PHP and MySQL database.
 ## API Details
 See [Image API Specification](docs/api-image-specification.md) and [Data API Specification](docs/api-data-specification.md) for more details on the specific APIs.
 
-## Client Library [WIP]
-The repository includes a simple python based client library and examples for publishing both images and data. The code uses the excelent [Requests](http://docs.python-requests.org/en/master/) library for HTTP communication.
+## Usage and Client Library
+The repository includes a simple python based client library and examples for publishing both images and data[WIP]. The code uses the excelent [Requests](http://docs.python-requests.org/en/master/) library for HTTP communication. 
+
+For the Image API, an image can be easily uploaded using the following `curl` command (replace <> with your own values):
+```bash
+curl -F 'image=@<IMAGE PATH>' -H 'Token: <TOKEN>' <BASE_URL>/api/image/<RESOURCE_NAME>
+```
+Or if you prefer to do a raw file upload instead: 
+```bash
+curl --data-binary @<IMAGE PATH> -H 'Content-Type: text/plain' -H 'Token: <TOKEN>' <BASE_URL>/api/image/<RESOURCE_NAME>
+```
+> The `Content-Type: text/plain` header need to be specified because the `--data` flag automatically sets the `Content-Type` to `application/x-www-form-urlencoded` which is not what the API expects. 
+
 
 ## Token Generator
 A publicly available token generator is included in the `/token-gen` directory. It is based on JavaScript using the [js-sha256]( https://github.com/emn178/js-sha256) library. All calculations are done in the browser, eliminating the need for sending senitive secret keys over the internet. It can be used to generate tokens for both the Image and Data API.

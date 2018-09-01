@@ -1,21 +1,12 @@
 <?php
-    // Scpipt for uploading and retrieving image files (for example from webcams) 
+    // Script for uploading and retrieving image files (for example from webcams) 
     // Inspiration: https://cloudinary.com/blog/file_upload_with_php
-
-    // some global parameters
 
     // include the configuration file
     $config = include("include/config.php");
+
+    // and the common functions
     include_once("include/common.php");
-
-    //_DSC5595 - 5B686526F8890F38E47D22A212544CF0272BF81FED1E84A3E436B0181BD8A624
-    //_DSC5595.jpg - 6A3A1DED227689D2A1341B8ECFC14AB4ACAFA5A6E98D382C50DB78826BDD29EB
-
-    //cat.jpg - DB73FD963840B2BDE4D1B236524C854B4135EB02B5DD4EFC5D4E29B4090E7C00
-    //cat - 1417C5FF6495966A86780847C7B7341355BEF453F39164C7F165BFE69BA175B2
-
-
-    
 
     function getFilePath($name, $salt){
         // get the current directory
@@ -82,47 +73,44 @@
             end_script(false, -1, $errors, 401); // Unauthorized
         }
 
-        // check if a file was acually provided?
-        if(!isset($_FILES['image'])){
-            
-            $errors[] = "No image file specified in POST";
+        // initialize some variables
+        $fileTmpName = null;
 
-            // end script here
+        // check if a file was provided as a file upload
+        if(isset($_FILES['image'])){
+        
+            // make sure there were no errors during upload
+            if($_FILES['image']['error']){
+                $errors[] = "There was an error during file upload";
+
+                end_script(false, -1, $errors, 400); // Bad Request
+            }
+
+            // set file temporary name to the provided one in upload
+            $fileTmpName = $_FILES['image']['tmp_name'];
+            
+        } else {
+            // since file upload was not used, assume the image is sent as raw HTTP data
+            $postdata = file_get_contents("php://input");
+
+            //echo json_encode($_POST);
+
+            // generate temporary place to store image
+            $fileTmpName = tempnam(sys_get_temp_dir(), 'img');
+            
+            // store to temporary file
+            file_put_contents($fileTmpName, $postdata);
+           
+        } 
+
+        // make sure we actually got something
+        if ($fileTmpName == null){
+            $errors[] = "Please attach an image file";
             end_script(false, -1, $errors, 400); // Bad request
-            
-        }      
-        
-        // make sure there were no errors during upload
-        if($_FILES['image']['error']){
-            $errors[] = "There was an error during file upload";
-
-            end_script(false, -1, $errors, 400); // Bad Request
-        }
-
-        // the allowed image file extensions
-        $fileExtensions = ['jpeg', 'jpg', 'png'];
-
-        // information about the file being uploaded
-        $file = $_FILES['image'];       
-        $fileName = $file['name'];
-        $fileSize = $file['size'];
-        $fileTmpName = $file['tmp_name'];
-        $fileType = $file['type'];
-        // $fileExtension = strtolower(end(explode('.', $fileName)));
-        
-
-        $fileExtension = pathinfo($fileName)['extension'];
-
-        // create the upload path
-        $uploadPath = getFilePath($resourceName, $config['salt']);
-   
-        // check file extension
-        if(!in_array($fileExtension, $fileExtensions)){
-            $errors[] = "This file extension is not allowed, please upload a JPEG or PNG file";
         }
 
         // check file size
-        if ($fileSize > 2000000) {
+        if (filesize($fileTmpName) > 2000000) {
             $errors[] = "The file has to be less than or equal to 2MB in size";
         }
 
@@ -133,8 +121,15 @@
 
         // only save file if there were no errors
         if(empty($errors)){
-            // move the uploaded file
-            $didUpload = move_uploaded_file($fileTmpName, $uploadPath);
+            // create the upload path
+            $uploadPath = getFilePath($resourceName, $config['salt']);
+
+            // move the uploaded file, this is different depending on whether the image was uploaded using a POST file upload or raw HTTP data
+            if(isset($_FILES['image'])){
+                $didUpload = move_uploaded_file($fileTmpName, $uploadPath);
+            }else{
+                $didUpload = rename($fileTmpName, $uploadPath);
+            }
 
             // check if file was uploaded or not
             if($didUpload)
@@ -145,6 +140,7 @@
             }
         } 
         
+        // end with errors
         end_script(false, -1, $errors, 200);
         
     }
