@@ -6,7 +6,7 @@ import hashlib
 """ generates a valid token for the specified resource using the provided secret key """
 def generate_token(resourceName, secretKey):
     # generate the authorization token by hashing the concatenation of the secret and the resource name
-    return hashlib.sha256(secretKey.encode() + resourceName.encode()).hexdigest()
+    return hashlib.sha256(secretKey.encode() + resourceName.encode() + secretKey.encode()).hexdigest()
     
 
 

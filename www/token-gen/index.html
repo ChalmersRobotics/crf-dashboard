@@ -19,7 +19,7 @@
                 let secret = $("#secret").val();
                 let resource = $("#resource").val();
             
-                let key = sha256(secret+resource);
+                let key = sha256(secret+resource+secret);
 
                 $("#token").val(key);
             });

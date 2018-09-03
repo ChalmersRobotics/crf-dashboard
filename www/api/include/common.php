@@ -19,10 +19,10 @@
     function checkToken($resourceName, $userToken, $key_secret){        
        
         // generate the wanted token (the "false" here means that we want a hexadecimal string back)
-        $wantedToken = hash("sha256", $key_secret . $resourceName , false);
+        $wantedToken = hash("sha256", $key_secret . $resourceName . $key_secret, false);
 
         // check hashes and return value
-        return strtolower($userToken) === strtolower($wantedToken);
+        return hash_equals(strtolower($wantedToken), strtolower($userToken));
             
     }
 
