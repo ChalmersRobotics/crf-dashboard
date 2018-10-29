@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 import requests
 import os
 import hashlib
@@ -52,3 +54,4 @@ def upload_image(resourceName, token, filePath, urlString):
         print("An error occured while connecting to the server:")
         print(e)
         return False
+
